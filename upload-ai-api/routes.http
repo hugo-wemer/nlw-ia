@@ -16,9 +16,20 @@ Content-Type: audio/mpeg
 
 ###
 # @name create-transcription
-POST http://localhost:3333/videos/e637252a-7f2e-479b-9a8b-e1ad3ecb0ee5/transcription
+POST http://localhost:3333/videos/4a8a07d2-5141-4543-9742-dc0578060023/transcription
 Content-Type: application/json
 
 {
   "prompt": "derretimento de neve, ciclo da água"
+}
+
+###
+# @name generate-ai-completion
+POST http://localhost:3333/ai/complete
+Content-Type: application/json
+
+{
+  "videoId": "4a8a07d2-5141-4543-9742-dc0578060023",
+  "tempetature": 0.5,
+  "template": "Crie um título para o audio informado a seguir: '''{transcription}'''"
 }
