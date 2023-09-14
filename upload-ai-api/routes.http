@@ -31,5 +31,5 @@ Content-Type: application/json
 {
   "videoId": "4a8a07d2-5141-4543-9742-dc0578060023",
   "tempetature": 0.5,
-  "template": "Crie um título para o audio informado a seguir: '''{transcription}'''"
+  "prompt": "Crie um título para o audio informado a seguir: '''{transcription}'''"
 }
