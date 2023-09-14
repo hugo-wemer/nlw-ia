@@ -9,18 +9,31 @@ import { Github, Wand2 } from "lucide-react"
 import { VideoInputForm } from "@/components/video-input-form";
 import { PromptSelect } from "@/components/prompt-select";
 import { useState } from "react";
+import { useCompletion } from "ai/react"
 
 export default function Home() {
 
   const [temperature, setTemperature] = useState(0.5)
   const [videoId, setVideoId] = useState<string | null>(null)
 
-  function handlePromptSelected(template: string){
-    console.log(template)
-  }
-
-
-
+  const {
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+    completion,
+    isLoading,
+  } = useCompletion({
+    api: 'http://localhost:3333/ai/complete',
+    body: {
+      videoId,
+      temperature,
+    },
+    headers: { 
+      'Content-Type': 'application/json'
+    }
+  })
+  // console.log(videoId)
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex px-6 py-3 items-center justify-between border-b">
@@ -41,11 +54,14 @@ export default function Home() {
           <div className="grid grid-rows-2 gap-4 flex-1">
             <Textarea 
               placeholder="Inclua o prompt para a IA..."
-              className="resize-none p-4 leading-relaxed"/>
+              className="resize-none p-4 leading-relaxed"
+              value={input}
+              onChange={handleInputChange}/>
             <Textarea 
               placeholder="Resultado gerado pela IA..." 
               readOnly
-              className="resize-none p-4 leading-relaxed"/>
+              className="resize-none p-4 leading-relaxed"
+              value={completion}/>
           </div>
           <p className="text-sm text-muted-foreground">
             Lembre-se: você pode utilizar a variável <code className="text-blue-500">{'{transcription}'}</code> no seu prompt para adicionar o conteúdo da transcrição do vídeo selecionado
@@ -54,11 +70,11 @@ export default function Home() {
         <aside className="w-80 space-y-6">
           <VideoInputForm onVideoUploaded={setVideoId}/>
           <Separator />
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
 
           <div className="space-y-2">
               <Label htmlFor="model">Prompt</Label>
-              <PromptSelect onPromptSelected={handlePromptSelected}/>
+              <PromptSelect onPromptSelected={setInput}/>
           </div>
 
             <div className="space-y-2">
@@ -90,7 +106,7 @@ export default function Home() {
 
             <Separator />
 
-            <Button type="submit" className="w-full">
+            <Button disabled={isLoading || !videoId} type="submit" className="w-full">
               Executar
               <Wand2 className="w-4 h-4 ml-2"/>
             </Button>
