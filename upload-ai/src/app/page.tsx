@@ -1,3 +1,4 @@
+'use client'
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,8 +7,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Github, Wand2 } from "lucide-react"
 import { VideoInputForm } from "@/components/video-input-form";
+import { PromptSelect } from "@/components/prompt-select";
+import { useState } from "react";
 
 export default function Home() {
+
+  const [temperature, setTemperature] = useState(0.5)
+  const [videoId, setVideoId] = useState<string | null>(null)
+
+  function handlePromptSelected(template: string){
+    console.log(template)
+  }
+
+
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex px-6 py-3 items-center justify-between border-b">
@@ -39,22 +52,14 @@ export default function Home() {
           </p>
         </div>
         <aside className="w-80 space-y-6">
-          <VideoInputForm />
+          <VideoInputForm onVideoUploaded={setVideoId}/>
           <Separator />
           <form className="space-y-4">
 
           <div className="space-y-2">
               <Label htmlFor="model">Prompt</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione um prompt"/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="title">Título do Youtube</SelectItem>
-                  <SelectItem value="description">Descrição do Youtube</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+              <PromptSelect onPromptSelected={handlePromptSelected}/>
+          </div>
 
             <div className="space-y-2">
               <Label htmlFor="model">Modelo</Label>
@@ -76,6 +81,8 @@ export default function Home() {
                 min={0}
                 max={1}
                 step={0.1}
+                value={[temperature]}
+                onValueChange={value => setTemperature(value[0])}
                          
               />
               <span className="block text-xs text-muted-foreground italic leading-relaxed">Valores mais altos tendem a deixar o resultado mais criativo e com possíveis erros.</span>
